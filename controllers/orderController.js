@@ -8,19 +8,14 @@ import fs from 'fs';
 dotenv.config();
 
 export const orderForm = async (req, res, next) => {
-    const { pick_up_place, pick_up_date, product_name,
-        product_quantity, first_name, last_name,
+    const { pick_up_place, pick_up_date, products, first_name, last_name,
         email, phone_number, zip_code, city, street } = req.body;
 
     try {
-        const newProduct = {
-            product_name: product_name,
-            product_quantity: product_quantity,
-        }
         const newOrder = new orderSchema({
             pick_up_place: pick_up_place,
             pick_up_date: pick_up_date,
-            products: [newProduct],
+            products: products,
             first_name: first_name,
             last_name: last_name,
             email: email,
@@ -64,8 +59,7 @@ export const exportOrderToExcel = async (req, res) => {
         const columns = [
             { header: 'Pick Up Place', key: 'pick_up_place', width: 15 },
             { header: 'Pick Up Date', key: 'pick_up_date', width: 15 },
-            { header: 'Product Name', key: 'product_name', width: 15 },
-            { header: 'Product Quantity', key: 'product_quantity', width: 15 },
+            { header: 'Products', key: 'products', width: 50 },
             { header: 'First Name', key: 'first_name', width: 15 },
             { header: 'Last Name', key: 'last_name', width: 15 },
             { header: 'Email', key: 'email', width: 20 },
@@ -78,23 +72,23 @@ export const exportOrderToExcel = async (req, res) => {
         // Set columns for the Excel sheet
         worksheet.columns = columns;
 
+        const productsString = order.products.map(product => `${product.product_name}: ${product.product_quantity}`).join(', ');
+
         // Populate the worksheet with data
-        order.products.forEach(product => {
-            const rowData = {
-                pick_up_place: order.pick_up_place,
-                pick_up_date: order.pick_up_date,
-                product_name: product.product_name,
-                product_quantity: product.product_quantity,
-                first_name: order.first_name,
-                last_name: order.last_name,
-                email: order.email,
-                phone_number: order.phone_number,
-                zip_code: order.zip_code,
-                city: order.city,
-                street: order.street,
-            };
-            worksheet.addRow(rowData);
-        });
+        const rowData = {
+            pick_up_place: order.pick_up_place,
+            pick_up_date: order.pick_up_date,
+            products: productsString,
+            first_name: order.first_name,
+            last_name: order.last_name,
+            email: order.email,
+            phone_number: order.phone_number,
+            zip_code: order.zip_code,
+            city: order.city,
+            street: order.street,
+        };
+        worksheet.addRow(rowData);
+
 
         // Generate the Excel file in memory
         const buffer = await workbook.xlsx.writeBuffer();
