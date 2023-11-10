@@ -1,9 +1,10 @@
 import express from 'express';
-import { exportOrderToExcel, orderForm } from '../controllers/OrderController.js';
+import { exportOrdersToExcel, exportOrderToExcelById, orderForm } from '../controllers/OrderController.js';
 
 const router = express.Router();
 
 router.post('/orderForm', orderForm);
-router.post('/export-xlsx', exportOrderToExcel);
+router.post('/export-xlsx-byId', exportOrderToExcelById);
+router.post('/export-xlsx', exportOrdersToExcel);
 
 export default router;
