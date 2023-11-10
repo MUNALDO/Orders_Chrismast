@@ -1,4 +1,4 @@
-import { CREATED, NOT_FOUND, SYSTEM_ERROR } from "../constant/HttpStatus.js";
+import { CREATED, NOT_FOUND, OK, SYSTEM_ERROR } from "../constant/HttpStatus.js";
 import orderSchema from "../models/orderSchema.js";
 import sendEmail from "./MailSending.js";
 import dotenv from 'dotenv';
@@ -182,6 +182,15 @@ export const exportOrdersToExcel = async (req, res) => {
     } catch (error) {
         console.error('Error exporting Excel:', error);
         return res.status(SYSTEM_ERROR).json({ error: 'Internal server error' });
+    }
+};
+
+export const getAllOrder = async (req, res, next) => {
+    try {
+        const orders = await orderSchema.find();
+        res.status(OK).json(orders);
+    } catch (err) {
+        next(err);
     }
 };
 
