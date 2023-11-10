@@ -39,40 +39,6 @@ function App() {
                 // </ProtectedRoute>
               }
             />
-            {/* <Route path="users/get">
-              <Route
-                index
-                element={
-                  <ProtectedRoute>
-                    <List columns={userColumns} />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="users/get/:userId"
-                element={
-                  <ProtectedRoute>
-                    <Single />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="new"
-                element={
-                  <ProtectedRoute>
-                    <New inputs={userInputs} title="Add New Patient" />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="update/:userId"
-                element={
-                  <ProtectedRoute>
-                    <UpdateUser inputs={userInputs} title="Update Patient" />
-                  </ProtectedRoute>
-                }
-              />
-            </Route> */}
             <Route path="order/get">
               <Route
                 index

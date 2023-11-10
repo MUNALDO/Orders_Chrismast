@@ -1,39 +1,38 @@
 import "./new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-// import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useState } from "react";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Export = ({ inputs, title }) => {
-  const location = useLocation();
-  const orgPath = location.pathname.split("/")[1];
+const Export = ({ title }) => {
   const navigate = useNavigate();
-  const [file, setFile] = useState("");
-  const [info, setInfo] = useState({});
-  // console.log(orgPath);
-
-  // const handleChange = (e) => {
-  //   setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-  // };
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "upload");
 
     try {
+      const response = await fetch("/order/export-xlsx", { method: "POST" });
 
-      await axios.post("/order/export-xlsx");
+      if (response.ok) {
+        // Trigger download by creating a Blob and using the URL.createObjectURL
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "orders.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
 
+        console.log("Export successful");
+      } else {
+        console.error(`Export failed with status: ${response.status}`);
+      }
     } catch (err) {
-      console.log(err);
+      console.error("Error exporting:", err);
     }
   };
 
-  // console.log(info);
   return (
     <div className="new">
       <Sidebar />

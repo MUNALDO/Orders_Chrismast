@@ -118,9 +118,6 @@ export const exportOrdersToExcel = async (req, res) => {
             return res.status(NOT_FOUND).json({ error: "No orders found" });
         }
 
-        // Define the file name
-        const fileName = 'orders.xlsx';
-
         // Create a new Excel workbook and worksheet
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Orders');
@@ -140,13 +137,11 @@ export const exportOrdersToExcel = async (req, res) => {
             { header: 'Street', key: 'street', width: 15 },
         ];
 
-        // Set columns for the Excel sheet
         worksheet.columns = columns;
 
-        // Populate the worksheet with data
         orders.forEach(order => {
             order.products.forEach(product => {
-                const rowData = {
+                worksheet.addRow({
                     pick_up_place: order.pick_up_place,
                     pick_up_date: order.pick_up_date,
                     product_name: product.product_name,
@@ -158,27 +153,19 @@ export const exportOrdersToExcel = async (req, res) => {
                     zip_code: order.zip_code,
                     city: order.city,
                     street: order.street,
-                };
-                worksheet.addRow(rowData);
+                });
             });
         });
 
         // Generate the Excel file in memory
         const buffer = await workbook.xlsx.writeBuffer();
 
-        // Save the buffer to the file path
-        try {
-            fs.writeFileSync(fileName, buffer);
-            console.log(`Excel file saved to ${fileName}`);
-        } catch (error) {
-            console.error('Error saving the Excel file:', error);
-        }
-
-        // Set content type and attachment header with the generated file name
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+        res.setHeader('Content-Disposition', 'attachment; filename=orders.xlsx');
+
         // Send the buffer as the response
         res.send(buffer);
+
     } catch (error) {
         console.error('Error exporting Excel:', error);
         return res.status(SYSTEM_ERROR).json({ error: 'Internal server error' });
