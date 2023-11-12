@@ -2,7 +2,7 @@ import express from 'express';
 import {
     exportOrdersToExcel, exportOrderToExcelById,
     getAllOrder, orderForm
-} from '../controllers/OrderController.js';
+} from '../controllers/orderController.js';
 
 const router = express.Router();
 
