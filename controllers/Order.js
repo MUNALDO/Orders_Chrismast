@@ -1,9 +1,9 @@
 import { CREATED, NOT_FOUND, OK, SYSTEM_ERROR } from "../constant/HttpStatus.js";
-import orderSchema from "../models/orderSchema.js";
 import sendEmail from "./MailSending.js";
 import dotenv from 'dotenv';
 import ExcelJS from 'exceljs';
 import fs from 'fs';
+import order from "../models/order.js";
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ export const orderForm = async (req, res, next) => {
         email, phone_number, zip_code, city, street } = req.body;
 
     try {
-        const newOrder = new orderSchema({
+        const newOrder = new order({
             pick_up_place: pick_up_place,
             pick_up_date: pick_up_date,
             products: products,
@@ -112,7 +112,7 @@ export const orderForm = async (req, res, next) => {
 export const exportOrdersToExcel = async (req, res) => {
     try {
         // Fetch orders data
-        const orders = await orderSchema.find();
+        const orders = await order.find();
 
         if (!orders || orders.length === 0) {
             return res.status(NOT_FOUND).json({ error: "No orders found" });
@@ -174,7 +174,7 @@ export const exportOrdersToExcel = async (req, res) => {
 
 export const getAllOrder = async (req, res, next) => {
     try {
-        const orders = await orderSchema.find();
+        const orders = await order.find();
         res.status(OK).json(orders);
     } catch (err) {
         next(err);
