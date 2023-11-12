@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { FORBIDDEN, OK, SYSTEM_ERROR } from './constant/HttpStatus.js';
-import myLogger from './winstonLog/winston.js';
 import cors from 'cors';
 import orderRoute from './routes/order.js';
 
@@ -14,14 +13,14 @@ mongoose.set('strictQuery', false);
 const connect = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URL);
-        myLogger.info("Database connected");
+        console.log("Database connected");
     } catch (error) {
         throw error;
     }
 }
 
 mongoose.connection.on('disconnected', () => {
-    myLogger.info("Database disconnected");
+    console.log("Database disconnected");
 });
 
 app.use(cors());
