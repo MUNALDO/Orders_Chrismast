@@ -47,7 +47,7 @@ app.get('/home', (req, res) => {
 async function startApp() {
     app.listen(8080, () => {
         connect();
-        myLogger.info('Server is running on port 8080');
+        console.log('Server is running on port 8080');
     });
 }
 
