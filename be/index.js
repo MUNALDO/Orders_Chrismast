@@ -40,6 +40,10 @@ app.use((err, req, res, next) => {
     });
 });
 
+app.get('/home', (req, res) => {
+    res.status(OK).json('Welcome, your app is working well');
+  })
+
 async function startApp() {
     app.listen(8080, () => {
         connect();
