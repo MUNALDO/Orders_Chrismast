@@ -39,13 +39,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-// app.get('/home', (req, res) => {
-//     res.status(OK).json('Welcome, your app is working well');
-//   })
-
 app.listen(8080, () => {
     connect();
     console.log('Server is running on port 8080');
 });
 
-// startApp();
