@@ -16,7 +16,7 @@ export const orderForm = async (req, res, next) => {
         secure: false,
         auth: {
             user: "thainx.bi11-239@st.usth.edu.vn",
-            pass: "thai0934678855",
+            pass: thai0934678855,
         },
     });
 
