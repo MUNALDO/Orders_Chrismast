@@ -175,6 +175,7 @@ export const exportOrdersToExcel = async (req, res) => {
 export const getAllOrder = async (req, res, next) => {
     try {
         const orders = await order.find();
+        console.log(orders);
         res.status(OK).json(orders);
     } catch (err) {
         next(err);
