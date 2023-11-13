@@ -176,7 +176,7 @@ export const getAllOrder = async (req, res, next) => {
     try {
         const orders = await order.find();
         console.log(orders);
-        return res.status(OK).json(orders);
+        res.status(200).json(orders);
     } catch (err) {
         next(err);
     }
