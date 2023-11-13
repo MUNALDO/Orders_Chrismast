@@ -33,4 +33,3 @@ const sendEmail = (to, cc, subject, text) => {
   });
 };
 
-export default sendEmail;

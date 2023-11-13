@@ -1,15 +1,44 @@
 import { CREATED, NOT_FOUND, OK, SYSTEM_ERROR } from "../constant/HttpStatus.js";
 import order from "../models/order.js";
-import sendEmail from "./MailSending.js";
 import dotenv from 'dotenv';
 import ExcelJS from 'exceljs';
-// import Order from "../models/order.js"
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
 export const orderForm = async (req, res, next) => {
     const { pick_up_place, pick_up_date, products, first_name, last_name,
         email, phone_number, zip_code, city, street } = req.body;
+
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.MAIL_ADDRESS,
+            pass: process.env.MAIL_PASSWORD,
+        },
+    });
+
+    const sendEmail = (to, cc, subject, text) => {
+        return new Promise((resolve, reject) => {
+            transporter.sendMail({
+                from: process.env.MAIL_ADDRESS,
+                to,
+                cc,
+                subject,
+                text,
+            }, (error, info) => {
+                if (error) {
+                    console.error('Error sending email:', error);
+                    reject(error);
+                } else {
+                    console.log('Email sent:', info.messageId);
+                    resolve(info);
+                }
+            });
+        });
+    };
 
     try {
         const newOrder = new order({
