@@ -1,46 +1,25 @@
-import { CREATED, NOT_FOUND, OK, SYSTEM_ERROR } from "../constant/HttpStatus.js";
+import { CREATED } from "../constant/HttpStatus.js";
 import order from "../models/order.js";
 import dotenv from 'dotenv';
-import ExcelJS from 'exceljs';
 import nodemailer from 'nodemailer';
 
 dotenv.config();
 
 export const orderForm = async (req, res, next) => {
-    const { pick_up_place, pick_up_date, products, first_name, last_name,
-        email, phone_number, zip_code, city, street } = req.body;
+    const {
+        pick_up_place, pick_up_date, products, first_name, last_name,
+        email, phone_number, zip_code, city, street
+    } = req.body;
 
     try {
         const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
+            service: 'gmail',
             auth: {
                 user: process.env.MAIL_ADDRESS,
                 pass: process.env.MAIL_PASSWORD,
             },
         });
-    
-        const sendEmail = (to, cc, subject, text) => {
-            return new Promise((resolve, reject) => {
-                transporter.sendMail({
-                    from: process.env.MAIL_ADDRESS,
-                    to,
-                    cc,
-                    subject,
-                    text,
-                }, (error, info) => {
-                    if (error) {
-                        console.error('Error sending email:', error);
-                        reject(error);
-                    } else {
-                        console.log('Email sent:', info.messageId);
-                        resolve(info);
-                    }
-                });
-            });
-        };
-    
+
         const newOrder = new order({
             pick_up_place: pick_up_place,
             pick_up_date: pick_up_date,
@@ -52,13 +31,24 @@ export const orderForm = async (req, res, next) => {
             zip_code: zip_code,
             city: city,
             street: street
-        })
+        });
+
         const emailSubject = "Order Recorded";
         const emailContent = `Dear ${first_name} ${last_name},
                         \n\nYour order has been recorded.
                         \n\nPlease wait for several days. We will contact with you to...
                         \n\nThank you for choosing our service.`;
-        sendEmail(email, process.env.MAIL_ADDRESS, emailSubject, emailContent);
+
+        const mailOptions = {
+            from: process.env.MAIL_ADDRESS,
+            to: email,
+            subject: emailSubject,
+            text: emailContent,
+        };
+
+        // Send email
+        await transporter.sendMail(mailOptions);
+
         const createOrder = await newOrder.save();
         res.status(CREATED).json(createOrder);
     } catch (err) {
