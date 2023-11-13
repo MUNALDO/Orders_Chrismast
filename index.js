@@ -43,11 +43,9 @@ app.use((err, req, res, next) => {
 //     res.status(OK).json('Welcome, your app is working well');
 //   })
 
-async function startApp() {
-    app.listen(8080, () => {
-        connect();
-        console.log('Server is running on port 8080');
-    });
-}
+app.listen(8080, () => {
+    connect();
+    console.log('Server is running on port 8080');
+});
 
-startApp();
+// startApp();
