@@ -12,5 +12,10 @@
       "dest": "/"
     }
   ],
-  "regions": ["hkg1"]
+  "regions": ["hkg1"],
+  "functions": {
+    "*": {
+      "maxDuration": 30
+    }
+  }
 }
