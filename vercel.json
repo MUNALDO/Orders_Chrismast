@@ -2,22 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.js",
+      "src": "*.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "index.js"
+      "dest": "/"
     }
-  ],
-  "env": {
-    "NODE_VERSION": "18.10.0"
-  },
-  "functions": {
-    "*": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
