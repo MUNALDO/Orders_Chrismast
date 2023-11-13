@@ -45,8 +45,9 @@ app.use((err, req, res, next) => {
 
 async function startApp() {
     try {
+        await connect();
         app.listen(8080, () => {
-            connect();
+            // connect();
             console.log('Server is running on port 8080');
         });
     } catch (error) {
