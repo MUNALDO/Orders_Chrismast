@@ -1,9 +1,9 @@
 import { CREATED, NOT_FOUND, OK, SYSTEM_ERROR } from "../constant/HttpStatus.js";
+import order from "../models/order.js";
 import sendEmail from "./MailSending.js";
 import dotenv from 'dotenv';
 import ExcelJS from 'exceljs';
-import fs from 'fs';
-import order from "../models/order.js";
+// import Order from "../models/order.js"
 
 dotenv.config();
 
@@ -176,7 +176,7 @@ export const getAllOrder = async (req, res, next) => {
     try {
         const orders = await order.find();
         console.log(orders);
-        res.status(200).json(orders);
+        res.status(OK).json(orders);
     } catch (err) {
         next(err);
     }

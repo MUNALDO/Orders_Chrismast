@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema(
+const order = new mongoose.Schema(
     {
         pick_up_place: {
             type: String,
@@ -54,4 +54,4 @@ const orderSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export default mongoose.model("Order", orderSchema);
+export default mongoose.model("Order", order);
