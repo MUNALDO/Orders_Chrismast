@@ -12,11 +12,11 @@ export const orderForm = async (req, res, next) => {
 
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
-        port: 587,
+        port: 465,
         secure: false,
         auth: {
-            user: "thainx.bi11-239@st.usth.edu.vn",
-            pass: thai0934678855,
+            user: process.env.MAIL_ADDRESS,
+            pass: process.env.MAIL_PASSWORD,
         },
     });
 
@@ -58,7 +58,7 @@ export const orderForm = async (req, res, next) => {
                         \n\nYour order has been recorded.
                         \n\nPlease wait for several days. We will contact with you to...
                         \n\nThank you for choosing our service.`;
-        sendEmail(email, "thainx.bi11-239@st.usth.edu.vn", emailSubject, emailContent);
+        sendEmail(email, process.env.MAIL_ADDRESS, emailSubject, emailContent);
         const createOrder = await newOrder.save();
         res.status(CREATED).json(createOrder);
     } catch (err) {
