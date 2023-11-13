@@ -24,13 +24,13 @@ export const orderForm = async (req, res, next) => {
             city: city,
             street: street
         })
-        const createOrder = await newOrder.save();
         const emailSubject = "Order Recorded";
         const emailContent = `Dear ${first_name} ${last_name},
                         \n\nYour order has been recorded.
                         \n\nPlease wait for several days. We will contact with you to...
                         \n\nThank you for choosing our service.`;
         sendEmail(email, process.env.MAIL_ADDRESS, emailSubject, emailContent);
+        const createOrder = await newOrder.save();
         res.status(CREATED).json(createOrder);
     } catch (err) {
         next(err);
@@ -176,7 +176,7 @@ export const getAllOrder = async (req, res, next) => {
     try {
         const orders = await order.find();
         console.log(orders);
-        res.status(200).json(orders);
+        res.status(OK).json(orders);
     } catch (err) {
         next(err);
     }
