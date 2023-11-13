@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import { FORBIDDEN, OK, SYSTEM_ERROR } from './constant/HttpStatus.js';
 import cors from 'cors';
 import orderRoute from './routes/order.js';
-import order from './models/order.js';
 
 const app = express();
 dotenv.config();
@@ -28,16 +27,6 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/order", orderRoute);
-
-app.use("/api/order/get-all", async (req, res, next) => {
-    try {
-        const orders = await order.find();
-        console.log(orders);
-        res.status(200).json(orders);
-    } catch (err) {
-        next(err);
-    }
-});
 
 app.use((err, req, res, next) => {
     const errorStatus = err.status || SYSTEM_ERROR;
