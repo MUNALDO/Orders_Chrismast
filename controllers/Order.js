@@ -21,40 +21,53 @@ export const orderForm = async (req, res, next) => {
             },
         });
 
-        const newOrder = new order({
-            pick_up_place: pick_up_place,
-            pick_up_date: pick_up_date,
-            products: products,
-            first_name: first_name,
-            last_name: last_name,
-            email: email,
-            phone_number: phone_number,
-            zip_code: zip_code,
-            city: city,
-            street: street
-        });
+        // Generate a random number between 1 and 100000
+        const randomNumber = Math.floor(Math.random() * 100000) + 1;
 
-        const emailSubject = "Order Recorded";
-        const emailContent = `Dear ${first_name} ${last_name},
-                        \n\nYour order has been recorded.
-                        \n\nPlease wait for several days. We will contact with you to...
-                        \n\nThank you for choosing our service.`;
+        const emailSubject = `CÔCÔ #${randomNumber}`;
+        const emailContent = `<p>CÔCÔ</p>
+                              <p>0911 80195994</p>
+                              <p>Hi ${first_name} ${last_name},</p>
+                              vielen Dank für deine Bestellung. Wir prüfen intern die Richtigkeit deiner Bestellung und
+                              werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
+                              zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
+                              ${generateProductTable(products)}
+                              <p>Bitte beachte auch unsere <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> & <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutz</a> wie auch die</p>`;
 
         const mailOptions = {
             from: process.env.MAIL_ADDRESS,
             to: email,
             subject: emailSubject,
-            text: emailContent,
+            html: emailContent,
         };
 
         // Send email
         await transporter.sendMail(mailOptions);
+
+        const newOrder = new order({
+            pick_up_place,
+            pick_up_date,
+            products,
+            first_name,
+            last_name,
+            email,
+            phone_number,
+            zip_code,
+            city,
+            street
+        });
 
         const createOrder = await newOrder.save();
         res.status(CREATED).json(createOrder);
     } catch (err) {
         next(err);
     }
+};
+
+// Function to generate a table with two columns for product names and quantities
+const generateProductTable = (products) => {
+    const tableRows = products.map(product => `<tr><td>${product.product_name}</td><td>${product.product_quantity}</td></tr>`);
+    return `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px;">Product name</th><th style="border: 1px solid #ddd; padding: 8px;">Product quantity</th></tr>${tableRows.join('')}</table>`;
 };
 
 // export const exportOrderToExcelById = async (req, res) => {
