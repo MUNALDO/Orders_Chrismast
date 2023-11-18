@@ -52,5 +52,5 @@
       "last 1 edge version"
     ]
   },
-  "proxy": "http://localhost:8080/api"
+  "proxy": "https://orders-chrismast-ten.vercel.app/api"
 }
