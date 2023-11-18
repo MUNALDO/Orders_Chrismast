@@ -2,11 +2,14 @@ import mongoose from "mongoose";
 
 const order = new mongoose.Schema(
     {
+        order_number: {
+            type: Number,
+        },
         pick_up_place: {
             type: String,
             require: true
         },
-        pick_up_date: {
+        pick_up_time: {
             type: String,
             require: true
         },
@@ -17,6 +20,10 @@ const order = new mongoose.Schema(
                     require: true
                 },
                 product_quantity: {
+                    type: Number,
+                    require: true
+                },
+                product_value: {
                     type: Number,
                     require: true
                 }
@@ -37,19 +44,7 @@ const order = new mongoose.Schema(
         phone_number: {
             type: String,
             require: true
-        },
-        zip_code: {
-            type: Number,
-            require: true
-        },
-        city: {
-            type: String,
-            require: true
-        },
-        street: {
-            type: String,
-            require: true
-        },
+        }
     },
     { timestamps: true }
 );

@@ -8,8 +8,8 @@ dotenv.config();
 
 export const orderForm = async (req, res, next) => {
     const {
-        pick_up_place, pick_up_date, products, first_name, last_name,
-        email, phone_number, zip_code, city, street
+        order_number, pick_up_place, pick_up_time, products, first_name, last_name,
+        email, phone_number
     } = req.body;
 
     try {
@@ -21,26 +21,31 @@ export const orderForm = async (req, res, next) => {
             },
         });
 
-        // Generate a random number between 1 and 100000
-        const randomNumber = Math.floor(Math.random() * 100000) + 1;
+        const emailSubject = `CÔCÔ #${order_number}`;
+        const tableHtml = generateProductTable(products);
 
-        const emailSubject = `CÔCÔ #${randomNumber}`;
-        const emailContent = `<div style="text-align: center; font-family: 'Dancing Script', cursive; font-size: 24px;">
-                                <p>CÔCÔ</p>
-                             </div>
-                             <div style="text-align: center;">
-                                <p>0911 80195994</p>
-                             </div>
+        // Calculate additional values
+        const mwstValue = 0.07; // MwSt. value
+        const gesamtValue = products.reduce((sum, product) => sum + product.product_quantity * product.product_value, 0);
+        const nettoValue = gesamtValue - (gesamtValue * mwstValue);
+
+        const emailContent = `<div style="text-align: center;">
+                                <img src="https://ccu.lieferbude.de/static/img/logo_white.4185c536c1cb.png" alt="CÔCÔ" style="width: 100px; height: 90px;">
+                                <p>E-Mail: service@the-coco.de</p>
+                            </div>
                               <p>Hi ${first_name} ${last_name},</p>
+                              <br></br>
                               <p>vielen Dank für deine Bestellung. Wir prüfen intern die Richtigkeit deiner Bestellung und
                               werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
                               zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
-                              ${generateProductTable(products)}
-                              <p>Bitte beachte auch unsere <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> & <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutz</a> wie auch die</p>
+                              ${tableHtml}
+                              <p>Bitte beachte auch unsere <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
+                              <br></br>
+                              <br></br>
                               <p style="white-space: pre-line;">Schöne Grüße,<br>dein CÔCÔ-Team</p>`;
 
         const mailOptions = {
-            from: 'No Reply" <no-reply@gmail.com>',
+            from: '"No Reply" <no-reply@gmail.com>',
             to: email,
             subject: emailSubject,
             html: emailContent,
@@ -50,16 +55,14 @@ export const orderForm = async (req, res, next) => {
         await transporter.sendMail(mailOptions);
 
         const newOrder = new order({
+            order_number,
             pick_up_place,
-            pick_up_date,
+            pick_up_time,
             products,
             first_name,
             last_name,
             email,
-            phone_number,
-            zip_code,
-            city,
-            street
+            phone_number
         });
 
         const createOrder = await newOrder.save();
@@ -71,9 +74,24 @@ export const orderForm = async (req, res, next) => {
 
 // Function to generate a table with two columns for product names and quantities
 const generateProductTable = (products) => {
-    const tableRows = products.map(product => `<tr><td style="text-align: center;">${product.product_name}</td><td style="text-align: center;">${product.product_quantity}</td></tr>`);
-    return `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Product name</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Product quantity</th></tr>${tableRows.join('')}</table>`;
+    const tableRows = products.map(product => `<tr><td style="text-align: center;">${product.product_name}</td><td style="text-align: center;">${product.product_quantity}x</td><td style="text-align: center;">${product.product_value}$</td><td style="text-align: center;">${product.product_quantity * product.product_value}$</td></tr>`);
+    const tableHtml = `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Produkt</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Menge</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Stuckpreis</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Gesamt</th></tr>${tableRows.join('')}</table>`;
+    
+    // Calculate additional values
+    const mwstValue = 0.07; // MwSt. value
+    const gesamtValue = products.reduce((sum, product) => sum + product.product_quantity * product.product_value, 0);
+    const nettoValue = gesamtValue - (gesamtValue * mwstValue);
+
+    // Additional rows without borders
+    const additionalRows = `
+        <tr><td colspan="2"></td><td style="text-align: center;">MwSt.</td><td style="text-align: center;">7.00%</td></tr>
+        <tr><td colspan="2"></td><td style="text-align: center;">Netto</td><td style="text-align: center;">${nettoValue}</td></tr>
+        <tr><td colspan="2"></td><td style="text-align: center;">Gesamt</td><td style="text-align: center;">${gesamtValue}</td></tr>
+    `;
+
+    return tableHtml + additionalRows;
 };
+
 
 // export const exportOrderToExcelById = async (req, res) => {
 //     const orderId = req.query.orderId;
