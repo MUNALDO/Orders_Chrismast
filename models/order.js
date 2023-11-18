@@ -2,48 +2,45 @@ import mongoose from "mongoose";
 
 const order = new mongoose.Schema(
     {
-        order_number: {
-            type: Number,
-        },
         pick_up_place: {
             type: String,
-            require: true
+            required: true
         },
         pick_up_time: {
             type: String,
-            require: true
+            required: true
         },
         products: [
             {
                 product_name: {
                     type: String,
-                    require: true
+                    required: true
                 },
                 product_quantity: {
                     type: Number,
-                    require: true
+                    required: true
                 },
                 product_value: {
                     type: Number,
-                    require: true
+                    default: 149
                 }
             }
         ],
         first_name: {
             type: String,
-            require: true
+            required: true
         },
         last_name: {
             type: String,
-            require: true
+            required: true
         },
         email: {
             type: String,
-            require: true
+            required: true
         },
         phone_number: {
             type: String,
-            require: true
+            required: true
         }
     },
     { timestamps: true }

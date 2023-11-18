@@ -8,11 +8,23 @@ dotenv.config();
 
 export const orderForm = async (req, res, next) => {
     const {
-        order_number, pick_up_place, pick_up_time, products, first_name, last_name,
+        pick_up_place, pick_up_time, products, first_name, last_name,
         email, phone_number
     } = req.body;
 
     try {
+
+        const newOrder = new order({
+            pick_up_place,
+            pick_up_time,
+            products,
+            first_name,
+            last_name,
+            email,
+            phone_number
+        });
+
+        const createOrder = await newOrder.save();
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -21,8 +33,11 @@ export const orderForm = async (req, res, next) => {
             },
         });
 
-        const emailSubject = `CÔCÔ #${order_number}`;
-        const tableHtml = generateProductTable(products);
+        // Generate a random number between 1 and 100000
+        const randomNumber = Math.floor(Math.random() * 100000) + 1;
+
+        const emailSubject = `CÔCÔ #${randomNumber}`;
+        const tableHtml = generateProductTable(newOrder.products);
 
         const emailContent = `<div style="text-align: center;">
                                 <img src="https://ccu.lieferbude.de/static/img/logo_white.4185c536c1cb.png" alt="CÔCÔ" style="width: auto; height: auto;">
@@ -48,19 +63,6 @@ export const orderForm = async (req, res, next) => {
 
         // Send email
         await transporter.sendMail(mailOptions);
-
-        const newOrder = new order({
-            order_number,
-            pick_up_place,
-            pick_up_time,
-            products,
-            first_name,
-            last_name,
-            email,
-            phone_number
-        });
-
-        const createOrder = await newOrder.save();
         res.status(CREATED).json(createOrder);
     } catch (err) {
         next(err);
@@ -71,9 +73,12 @@ export const orderForm = async (req, res, next) => {
 const generateProductTable = (products) => {
     const tableRows = products.map(product => `<tr><td style="text-align: center;">${product.product_name}</td><td style="text-align: center;">${product.product_quantity}x</td><td style="text-align: center;">${product.product_value}€</td><td style="text-align: center;">${product.product_quantity * product.product_value}€</td></tr>`);
     const tableHtml = `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Produkt</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Menge</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Stuckpreis</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Gesamt</th></tr>${tableRows.join('')}</table>`;
-    
+
     // Calculate additional values
-    const mwstValue = 0.07; 
+    // console.log(products);
+    // const productValue = products.map(product => product.product_value);
+    // console.log(productValue);
+    const mwstValue = 0.07;
     const gesamtValue = products.reduce((sum, product) => sum + product.product_quantity * product.product_value, 0);
     const nettoValue = gesamtValue - (gesamtValue * mwstValue);
 
