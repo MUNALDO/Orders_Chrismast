@@ -11,8 +11,8 @@ const Datatable = ({ columns }) => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
   // console.log(path);
-  const [list, setList] = useState();
-  const { data, loading, error } = useFetch(`/order/get`);
+  const [list, setList] = useState({});
+  const { data, loading, error } = useFetch(`https://orders-chrismast-ten.vercel.app/api/order/get`);
 
   useEffect(() => {
     setList(data);
