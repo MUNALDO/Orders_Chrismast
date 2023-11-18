@@ -2,22 +2,39 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 // import { userColumns, userRows } from "../../datatablesource";
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import useFetch from "../../hooks/UseFetch";
 
 const Datatable = ({ columns }) => {
   // console.log(columns);
-  const location = useLocation();
-  const path = location.pathname.split("/")[1];
-  // console.log(path);
   const [list, setList] = useState([]);
-  const { data, loading, error } = axios.get("/order/get");
+
+  // useEffect(() => {
+  //   setList(data);
+  //   console.log(data);
+  // }, [data]);
+
+  // const handleGet = async () => {
+  //   try {
+  //     const data = await fetch("/order/get", { method: "GET" });
+  //     setList(data);
+  //   } catch (error) {}
+  // };
+
+  const fetchOrderData = useCallback(() => {
+    axios(`/order/get`).then((data) => {
+      const orderData = data?.data;
+      if (!!orderData) {
+        setList(orderData);
+        // console.log(userData);
+      }
+    });
+  }, []);
 
   useEffect(() => {
-    setList(data);
-    console.log(data);
-  }, [data]);
+    fetchOrderData();
+  }, [fetchOrderData]);
 
   const handleDelete = async (id) => {
     try {
@@ -36,12 +53,12 @@ const Datatable = ({ columns }) => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        {path}
+        {/* {path} */}
         <Link to={`/order/get/export-xlsx`} className="link">
           Action
         </Link>
       </div>
-      <DataGrid 
+      <DataGrid
         className="datagrid"
         rows={list}
         columns={columns}
