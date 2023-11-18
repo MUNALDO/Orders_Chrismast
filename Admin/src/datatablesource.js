@@ -220,7 +220,7 @@ export const equipmentColumns = [
 ];
 
 export const ordersColumns = [
-  // { field: "_id", headerName: "ID", width: 30 },
+  { field: "_id", headerName: "ID", width: 30 },
   { field: "pick_up_place", headerName: "Pick up place", width: 80 },
   { field: "pick_up_date", headerName: "Pick up date", width: 130 },
   {
