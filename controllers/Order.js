@@ -24,13 +24,8 @@ export const orderForm = async (req, res, next) => {
         const emailSubject = `CÔCÔ #${order_number}`;
         const tableHtml = generateProductTable(products);
 
-        // Calculate additional values
-        const mwstValue = 0.07; // MwSt. value
-        const gesamtValue = products.reduce((sum, product) => sum + product.product_quantity * product.product_value, 0);
-        const nettoValue = gesamtValue - (gesamtValue * mwstValue);
-
         const emailContent = `<div style="text-align: center;">
-                                <img src="https://ccu.lieferbude.de/static/img/logo_white.4185c536c1cb.png" alt="CÔCÔ" style="width: 100px; height: 90px;">
+                                <img src="https://ccu.lieferbude.de/static/img/logo_white.4185c536c1cb.png" alt="CÔCÔ" style="width: auto; height: auto;">
                                 <p>E-Mail: service@the-coco.de</p>
                             </div>
                               <p>Hi ${first_name} ${last_name},</p>
@@ -74,19 +69,19 @@ export const orderForm = async (req, res, next) => {
 
 // Function to generate a table with two columns for product names and quantities
 const generateProductTable = (products) => {
-    const tableRows = products.map(product => `<tr><td style="text-align: center;">${product.product_name}</td><td style="text-align: center;">${product.product_quantity}x</td><td style="text-align: center;">${product.product_value}$</td><td style="text-align: center;">${product.product_quantity * product.product_value}$</td></tr>`);
+    const tableRows = products.map(product => `<tr><td style="text-align: center;">${product.product_name}</td><td style="text-align: center;">${product.product_quantity}x</td><td style="text-align: center;">${product.product_value}€</td><td style="text-align: center;">${product.product_quantity * product.product_value}€</td></tr>`);
     const tableHtml = `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Produkt</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Menge</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Stuckpreis</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Gesamt</th></tr>${tableRows.join('')}</table>`;
     
     // Calculate additional values
-    const mwstValue = 0.07; // MwSt. value
+    const mwstValue = 0.07; 
     const gesamtValue = products.reduce((sum, product) => sum + product.product_quantity * product.product_value, 0);
     const nettoValue = gesamtValue - (gesamtValue * mwstValue);
 
     // Additional rows without borders
     const additionalRows = `
         <tr><td colspan="2"></td><td style="text-align: center;">MwSt.</td><td style="text-align: center;">7.00%</td></tr>
-        <tr><td colspan="2"></td><td style="text-align: center;">Netto</td><td style="text-align: center;">${nettoValue}</td></tr>
-        <tr><td colspan="2"></td><td style="text-align: center;">Gesamt</td><td style="text-align: center;">${gesamtValue}</td></tr>
+        <tr><td colspan="2"></td><td style="text-align: center;">Netto</td><td style="text-align: center;">${nettoValue}€</td></tr>
+        <tr><td colspan="2"></td><td style="text-align: center;">Gesamt</td><td style="text-align: center;">${gesamtValue}€</td></tr>
     `;
 
     return tableHtml + additionalRows;
