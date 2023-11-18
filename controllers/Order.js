@@ -32,16 +32,15 @@ export const orderForm = async (req, res, next) => {
                                 <p>0911 80195994</p>
                              </div>
                               <p>Hi ${first_name} ${last_name},</p>
-                              vielen Dank für deine Bestellung. Wir prüfen intern die Richtigkeit deiner Bestellung und
+                              <p>vielen Dank für deine Bestellung. Wir prüfen intern die Richtigkeit deiner Bestellung und
                               werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
                               zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
                               ${generateProductTable(products)}
                               <p>Bitte beachte auch unsere <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> & <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutz</a> wie auch die</p>
                               <p style="white-space: pre-line;">Schöne Grüße,<br>dein CÔCÔ-Team</p>`;
 
-
         const mailOptions = {
-            from: process.env.MAIL_ADDRESS,
+            from: 'No Reply" <no-reply@gmail.com>',
             to: email,
             subject: emailSubject,
             html: emailContent,
@@ -72,8 +71,8 @@ export const orderForm = async (req, res, next) => {
 
 // Function to generate a table with two columns for product names and quantities
 const generateProductTable = (products) => {
-    const tableRows = products.map(product => `<tr><td>${product.product_name}</td><td>${product.product_quantity}</td></tr>`);
-    return `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px;">Product name</th><th style="border: 1px solid #ddd; padding: 8px;">Product quantity</th></tr>${tableRows.join('')}</table>`;
+    const tableRows = products.map(product => `<tr><td style="text-align: center;">${product.product_name}</td><td style="text-align: center;">${product.product_quantity}</td></tr>`);
+    return `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Product name</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Product quantity</th></tr>${tableRows.join('')}</table>`;
 };
 
 // export const exportOrderToExcelById = async (req, res) => {
