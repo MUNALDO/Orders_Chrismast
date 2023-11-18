@@ -16,7 +16,7 @@ const Datatable = ({ columns }) => {
 
   useEffect(() => {
     setList(data);
-    // console.log(data);
+    console.log(data);
   }, [data]);
 
   const handleDelete = async (id) => {
@@ -33,37 +33,6 @@ const Datatable = ({ columns }) => {
     } catch (err) {}
   };
 
-  // const actionColumn = [
-  //   {
-  //     field: "action",
-  //     headerName: "Action",
-  //     width: 200,
-  //     renderCell: (params) => {
-  //       return (
-  //         <div className="cellAction">
-  //           {path}
-  //           <Link
-  //             to={`${path}/get/${params.row._id}`}
-  //             style={{ textDecoration: "none" }}
-  //           >
-  //             <div
-  //               className="viewButton"
-  //               onClick={() => handleView(params.row._id)}
-  //             >
-  //               View 
-  //             </div>
-  //           </Link>
-  //           <div
-  //             className="deleteButton"
-  //             onClick={() => handleDelete(params.row._id)}
-  //           >
-  //             Delete
-  //           </div>
-  //         </div>
-  //       );
-  //     },
-  //   },
-  // ];
   return (
     <div className="datatable">
       <div className="datatableTitle">
