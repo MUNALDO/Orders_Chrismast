@@ -52,13 +52,6 @@ export const orderForm = async (req, res, next) => {
                                 werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
                                 zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
                                 ${tableHtml}
-                                <div style="color:white;">
-                                    <p>Bitte beachte auch unsere 
-                                        <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> 
-                                        wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
-                                    </div>
-                            </div>
-                            <div style="font-size: 20px;">
                                 <p>Bitte beachte auch unsere 
                                 <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> 
                                 wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
