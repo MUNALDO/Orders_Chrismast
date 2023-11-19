@@ -220,32 +220,34 @@ export const equipmentColumns = [
 ];
 
 export const ordersColumns = [
-  { field: "_id", headerName: "ID", width: 30 },
-  { field: "pick_up_place", headerName: "Pick up place", width: 80 },
-  { field: "pick_up_date", headerName: "Pick up date", width: 130 },
+  { field: "order_number", headerName: "Order Number", width: 110 },
+  { field: "pick_up_place", headerName: "Pick up place", width: 380 },
+  { field: "pick_up_time", headerName: "Pick up date", width: 130 },
   {
     field: "products",
     headerName: "Products",
-    width: 300,
-    height: 1000,
+    width: 500,
+    height: 2000,
     renderCell: (params) => {
       const products = params.value || [];
       return (
         <div>
           {products.map((product, index) => (
             <div key={index}>
-              <div>{`Product Name: ${product.product_name}`}</div>
+              {/* <div>{`Product Name: ${product.product_name} ||
+                    \n\nProduct Quantity: ${product.product_quantity} ||
+                    \n\nProduct Value: ${product.product_value}`}
+              </div> */}
               <div>{`Product Quantity: ${product.product_quantity}`}</div>
-              <div>{`Product Value: ${product.product_value}`}</div>
             </div>
           ))}
         </div>
       );
     },
   },
-  { field: "first_name", headerName: "First Name", width: 170 },
-  { field: "last_name", headerName: "Last Name", width: 120 },
-  { field: "email", headerName: "Email", width: 120 },
-  { field: "phone_number", headerName: "Phone Number", width: 120 }
+  { field: "first_name", headerName: "First Name", width: 130 },
+  { field: "last_name", headerName: "Last Name", width: 130 },
+  { field: "email", headerName: "Email", width: 270 },
+  { field: "phone_number", headerName: "Phone Number", width: 150 }
 ];
 

@@ -37,7 +37,7 @@ const Datatable = ({ columns }) => {
     <div className="datatable">
       <div className="datatableTitle">
         {path}
-        <Link to={`/order/get/export-xlsx`} className="link">
+        <Link to={"/export-xlsx"} className="link">
           Action
         </Link>
       </div>

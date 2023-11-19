@@ -42,7 +42,7 @@ export const orderForm = async (req, res, next) => {
 
         const emailContent = `
                             <div style="text-align: center; font-size: 20px;">
-                            <img src="https://i.ibb.co/hZ7gTsq/0dz6syd7.png" alt="coco_logo" style="width: auto; height: auto;">
+                            <img src="https://i.ibb.co/hZ7gTsq/0dz6syd7.png" alt="coco_logo" style="width: 80px; height: 150px;">
                                 <p>E-Mail: service@the-coco.de</p>
                             </div>
                             <div style="font-size: 20px;">
@@ -57,6 +57,7 @@ export const orderForm = async (req, res, next) => {
                                 wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
                             </div>
                             <div style="font-family: 'Dancing Script', cursive; font-size: 16px;">
+                                <br></br>
                                 <b>Umtausch und Stornierungen</b>
                             </div>
                             <div style="font-size: 16px;">
@@ -80,7 +81,7 @@ export const orderForm = async (req, res, next) => {
 
         // Send email
         await transporter.sendMail(mailOptions);
-        res.status(CREATED).json(createOrder);
+        return  res.status(CREATED).json(createOrder);
     } catch (err) {
         next(err);
     }
@@ -91,10 +92,6 @@ const generateProductTable = (products) => {
     const tableRows = products.map(product => `<tr><td style="text-align: center;">${product.product_name}</td><td style="text-align: center;">${product.product_quantity}x</td><td style="text-align: center;">${product.product_value}€</td><td style="text-align: center;">${product.product_quantity * product.product_value}€</td></tr>`);
     const tableHtml = `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;"><tr><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Produkt</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Menge</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Stuckpreis</th><th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Gesamt</th></tr>${tableRows.join('')}</table>`;
 
-    // Calculate additional values
-    // console.log(products);
-    // const productValue = products.map(product => product.product_value);
-    // console.log(productValue);
     // const mwstValue = 0.07;
     const gesamtValue = products.reduce((sum, product) => sum + product.product_quantity * product.product_value, 0);
     const nettoValue = (gesamtValue / 1.07).toFixed(2);
@@ -212,7 +209,7 @@ export const exportOrdersToExcel = async (req, res) => {
         // Define the columns for the Excel sheet
         const columns = [
             { header: 'Pick Up Place', key: 'pick_up_place', width: 15 },
-            { header: 'Pick Up Date', key: 'pick_up_date', width: 15 },
+            { header: 'Pick Up Time', key: 'pick_up_time', width: 15 },
             { header: 'Product Name', key: 'product_name', width: 15 },
             { header: 'Product Quantity', key: 'product_quantity', width: 15 },
             { header: 'First Name', key: 'first_name', width: 15 },
@@ -230,7 +227,7 @@ export const exportOrdersToExcel = async (req, res) => {
             order.products.forEach(product => {
                 worksheet.addRow({
                     pick_up_place: order.pick_up_place,
-                    pick_up_date: order.pick_up_date,
+                    pick_up_time: order.pick_up_time,
                     product_name: product.product_name,
                     product_quantity: product.product_quantity,
                     first_name: order.first_name,
