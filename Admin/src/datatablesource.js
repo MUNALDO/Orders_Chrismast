@@ -222,7 +222,7 @@ export const equipmentColumns = [
 export const ordersColumns = [
   { field: "order_number", headerName: "Order Number", width: 110 },
   { field: "pick_up_place", headerName: "Pick up place", width: 380 },
-  { field: "pick_up_time", headerName: "Pick up date", width: 130 },
+  { field: "pick_up_time", headerName: "Pick up time", width: 130 },
   {
     field: "products",
     headerName: "Products",
