@@ -8,16 +8,17 @@ dotenv.config();
 
 export const orderForm = async (req, res, next) => {
     const {
-        pick_up_place, pick_up_time, products, first_name, last_name,
+        order_number, pick_up_place, pick_up_time, products, first_name, last_name,
         email, phone_number
     } = req.body;
 
     try {
         // Generate a random number between 1 and 100000
-        const randomNumber = Math.floor(Math.random() * 100000) + 1;
+        // const randomNumber = Math.floor(Math.random() * 100000) + 1;
 
         const newOrder = new order({
-            order_number: randomNumber,
+            // order_number: randomNumber,
+            order_number,
             pick_up_place,
             pick_up_time,
             products,
