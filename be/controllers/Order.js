@@ -95,15 +95,29 @@ const generateProductTable = (products) => {
     // console.log(products);
     // const productValue = products.map(product => product.product_value);
     // console.log(productValue);
-    const mwstValue = 0.07;
+    // const mwstValue = 0.07;
     const gesamtValue = products.reduce((sum, product) => sum + product.product_quantity * product.product_value, 0);
-    const nettoValue = gesamtValue - (gesamtValue * mwstValue);
+    const nettoValue = (gesamtValue / 1.07).toFixed(2);
+    const a = gesamtValue - nettoValue;
+    const mwst = a.toFixed(2);
 
     // Additional rows without borders
     const additionalRows = `
-        <tr><td colspan="2"></td><td style="text-align: right;">MwSt.7.00%    </td><td style="text-align: center;">  ${Math.round(gesamtValue * mwstValue)}€</td></tr>
-        <tr><td colspan="2"></td><td style="text-align: right;">Netto  </td><td style="text-align: center;">${Math.round(nettoValue)}€</td></tr>
-        <tr><td colspan="2"></td><td style="text-align: right;">Gesamt   </td><td style="text-align: center;"> ${Math.round(gesamtValue)}€</td></tr>
+        <tr>
+            <td colspan="2"></td>
+            <td style="text-align: center;">MwSt.7.00%</td>
+            <td style="text-align: right;">${mwst}€</td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td style="text-align: center;">Netto</td>
+            <td style="text-align: right;">${nettoValue}€</td>
+        </tr>
+        <tr>
+            <td colspan="2"></td>
+            <td style="text-align: center;">Gesamt</td>
+            <td style="text-align: right;">${gesamtValue}€</td>
+        </tr>
     `;
 
     return tableHtml + additionalRows;
