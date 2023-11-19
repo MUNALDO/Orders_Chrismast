@@ -31,9 +31,7 @@ export const orderForm = async (req, res, next) => {
         // console.log(newOrder);
 
         const createdAtFromDb = newOrder.create_at;
-        // console.log(createdAtFromDb.toLocaleDateString());
-        // console.log(createdAtFromDb.toLocaleTimeString());
-        const newcreatedAt = `${createdAtFromDb.toLocaleDateString()}-${createdAtFromDb.toLocaleTimeString()}`;
+        const newcreatedAt = `${createdAtFromDb.toLocaleDateString("de-DE", {timeZone: "Europe/Berlin",})}-${createdAtFromDb.toLocaleTimeString("de-DE", {timeZone: "Europe/Berlin",})}`;
         console.log(newcreatedAt);
 
         const createOrder = await newOrder.save();
