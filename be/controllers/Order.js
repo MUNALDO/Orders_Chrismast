@@ -8,14 +8,16 @@ dotenv.config();
 
 export const orderForm = async (req, res, next) => {
     const {
-        order_number, pick_up_place, pick_up_time, products, first_name, last_name,
+        pick_up_place, pick_up_time, products, first_name, last_name,
         email, phone_number
     } = req.body;
 
     try {
+        // Generate a random number between 1 and 100000
+        const randomNumber = Math.floor(Math.random() * 100000) + 1;
 
         const newOrder = new order({
-            order_number,
+            order_number: randomNumber,
             pick_up_place,
             pick_up_time,
             products,
@@ -34,10 +36,7 @@ export const orderForm = async (req, res, next) => {
             },
         });
 
-        // Generate a random number between 1 and 100000
-        // const randomNumber = Math.floor(Math.random() * 100000) + 1;
-
-        const emailSubject = `CÔCÔ #${order_number}`;
+        const emailSubject = `CÔCÔ #${newOrder.order_number}`;
         const tableHtml = generateProductTable(newOrder.products);
 
         const emailContent = `
@@ -81,7 +80,7 @@ export const orderForm = async (req, res, next) => {
 
         // Send email
         await transporter.sendMail(mailOptions);
-        return  res.status(CREATED).json(createOrder);
+        return res.status(CREATED).json(createOrder);
     } catch (err) {
         next(err);
     }
