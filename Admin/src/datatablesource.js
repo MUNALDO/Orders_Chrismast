@@ -226,7 +226,7 @@ export const ordersColumns = [
   {
     field: "products",
     headerName: "Products",
-    width: 500,
+    width: 200,
     height: 2000,
     renderCell: (params) => {
       const products = params.value || [];
@@ -248,6 +248,7 @@ export const ordersColumns = [
   { field: "first_name", headerName: "First Name", width: 130 },
   { field: "last_name", headerName: "Last Name", width: 130 },
   { field: "email", headerName: "Email", width: 270 },
-  { field: "phone_number", headerName: "Phone Number", width: 150 }
+  { field: "phone_number", headerName: "Phone Number", width: 150 },
+  { field: "create_at_string", headerName: "Created At", width: 200 }
 ];
 

@@ -24,10 +24,22 @@ export const orderForm = async (req, res, next) => {
             first_name,
             last_name,
             email,
-            phone_number
+            phone_number,
+            create_at: new Date()
         });
 
+        // console.log(newOrder);
+
+        const createdAtFromDb = newOrder.create_at;
+        // console.log(createdAtFromDb.toLocaleDateString());
+        // console.log(createdAtFromDb.toLocaleTimeString());
+        const newcreatedAt = `${createdAtFromDb.toLocaleDateString()}-${createdAtFromDb.toLocaleTimeString()}`;
+        console.log(newcreatedAt);
+
         const createOrder = await newOrder.save();
+        createOrder.create_at_string = newcreatedAt;
+        createOrder.save();
+
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {

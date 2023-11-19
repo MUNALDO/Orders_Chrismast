@@ -44,6 +44,12 @@ const order = new mongoose.Schema(
         phone_number: {
             type: String,
             required: true
+        },
+        create_at: {
+            type: Date
+        },
+        create_at_string: {
+            type: String
         }
     },
     { timestamps: true }
