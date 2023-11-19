@@ -8,13 +8,14 @@ dotenv.config();
 
 export const orderForm = async (req, res, next) => {
     const {
-        pick_up_place, pick_up_time, products, first_name, last_name,
+        order_number, pick_up_place, pick_up_time, products, first_name, last_name,
         email, phone_number
     } = req.body;
 
     try {
 
         const newOrder = new order({
+            order_number,
             pick_up_place,
             pick_up_time,
             products,
@@ -34,25 +35,48 @@ export const orderForm = async (req, res, next) => {
         });
 
         // Generate a random number between 1 and 100000
-        const randomNumber = Math.floor(Math.random() * 100000) + 1;
+        // const randomNumber = Math.floor(Math.random() * 100000) + 1;
 
-        const emailSubject = `CÔCÔ #${randomNumber}`;
+        const emailSubject = `CÔCÔ #${order_number}`;
         const tableHtml = generateProductTable(newOrder.products);
 
-        const emailContent = `<div style="text-align: center;">
-                                <img src="https://ccu.lieferbude.de/static/img/logo_white.4185c536c1cb.png" alt="CÔCÔ" style="width: auto; height: auto;">
+        const emailContent = `
+                            <div style="text-align: center; font-size: 20px;">
+                            <img src="https://i.ibb.co/hZ7gTsq/0dz6syd7.png" alt="coco_logo" style="width: auto; height: auto;">
                                 <p>E-Mail: service@the-coco.de</p>
                             </div>
-                              <p>Hi ${first_name} ${last_name},</p>
+                            <div style="font-size: 20px;">
+                                <p>Hi ${first_name} ${last_name},</p>
+                                <br></br>
+                                <p>vielen Dank für deine Bestellung. Wir prüfen intern die Richtigkeit deiner Bestellung und
+                                werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
+                                zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
+                                ${tableHtml}
+                                <div style="color:white;">
+                                    <p>Bitte beachte auch unsere 
+                                        <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> 
+                                        wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
+                                    </div>
+                            </div>
+                            <div style="font-size: 20px;">
+                                <p>Bitte beachte auch unsere 
+                                <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> 
+                                wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
+                            </div>
+                            <div style="font-family: 'Dancing Script', cursive; font-size: 16px;">
+                                <b>Umtausch und Stornierungen</b>
+                            </div>
+                            <div style="font-size: 16px;">
+                                <p>Wenn Sie Ihre Bestellung stornieren oder ändern möchten, wenden Sie sich bitte baldmöglichst 
+                                an uns unter 0911 23735510, oder schicken Sie eine E-Mail an service@the-coco.de Wir werden uns nach besten Kräften bemühen, 
+                                Ihrem Ersuchen nachzukommen. Allerdings können wir nicht garantieren, dass ein Einkauf storniert 
+                                oder geändert werden kann, wenn eine Bestellung erst einmal aufgegeben wurde.</p>
+                            </div>
                               <br></br>
-                              <p>vielen Dank für deine Bestellung. Wir prüfen intern die Richtigkeit deiner Bestellung und
-                              werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
-                              zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
-                              ${tableHtml}
-                              <p>Bitte beachte auch unsere <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
                               <br></br>
-                              <br></br>
-                              <p style="white-space: pre-line;">Schöne Grüße,<br>dein CÔCÔ-Team</p>`;
+                            <div style="font-size: 20px;">
+                              <p style="white-space: pre-line;">Schöne Grüße,<br>dein CÔCÔ-Team</p>
+                            </div>`;
 
         const mailOptions = {
             from: '"No Reply" <no-reply@gmail.com>',
@@ -84,9 +108,9 @@ const generateProductTable = (products) => {
 
     // Additional rows without borders
     const additionalRows = `
-        <tr><td colspan="2"></td><td style="text-align: center;">MwSt.</td><td style="text-align: center;">7.00%</td></tr>
-        <tr><td colspan="2"></td><td style="text-align: center;">Netto</td><td style="text-align: center;">${nettoValue}€</td></tr>
-        <tr><td colspan="2"></td><td style="text-align: center;">Gesamt</td><td style="text-align: center;">${gesamtValue}€</td></tr>
+        <tr><td colspan="2"></td><td style="text-align: right;">MwSt.7.00%    </td><td style="text-align: center;">  ${Math.round(gesamtValue * mwstValue)}€</td></tr>
+        <tr><td colspan="2"></td><td style="text-align: right;">Netto  </td><td style="text-align: center;">${Math.round(nettoValue)}€</td></tr>
+        <tr><td colspan="2"></td><td style="text-align: right;">Gesamt   </td><td style="text-align: center;"> ${Math.round(gesamtValue)}€</td></tr>
     `;
 
     return tableHtml + additionalRows;

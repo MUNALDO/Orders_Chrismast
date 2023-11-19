@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 const order = new mongoose.Schema(
     {
+        order_number: {
+            type: Number
+        },
         pick_up_place: {
             type: String,
             required: true
