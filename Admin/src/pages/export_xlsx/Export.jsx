@@ -1,6 +1,4 @@
 import "./new.scss";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 
 const Export = ({ title }) => {
