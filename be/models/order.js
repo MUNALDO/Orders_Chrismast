@@ -13,22 +13,26 @@ const order = new mongoose.Schema(
             type: String,
             required: true
         },
-        products: [
-            {
-                product_name: {
-                    type: String,
-                    required: true
-                },
-                product_quantity: {
-                    type: Number,
-                    required: true
-                },
-                product_value: {
-                    type: Number,
-                    default: 148
-                }
+        products: {
+            product_name: {
+                type: String,
+                // required: true
+            },
+            product_quantity: {
+                type: Number,
+                // required: true
+            },
+            product_value: {
+                type: Number,
+                default: 148
+            },
+            discount_code: {
+                type: String,
+            },
+            total: {
+                type: Number,
             }
-        ],
+        },
         first_name: {
             type: String,
             required: true
