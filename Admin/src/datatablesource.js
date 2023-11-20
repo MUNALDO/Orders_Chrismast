@@ -232,15 +232,7 @@ export const ordersColumns = [
       const products = params.value || [];
       return (
         <div>
-          {products.map((product, index) => (
-            <div key={index}>
-              {/* <div>{`Product Name: ${product.product_name} ||
-                    \n\nProduct Quantity: ${product.product_quantity} ||
-                    \n\nProduct Value: ${product.product_value}`}
-              </div> */}
-              <div>{`Product Quantity: ${product.product_quantity}`}</div>
-            </div>
-          ))}
+              <div>{`Product Quantity: ${products.product_quantity}`}</div>
         </div>
       );
     },
