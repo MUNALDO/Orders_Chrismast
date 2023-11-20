@@ -43,25 +43,24 @@ export const orderForm = async (req, res, next) => {
 
         await createOrder.save();
 
-        if (createOrder.products.discount_code) {
-            // Check if discount_code is in the list_discount_code
-            if (list_discount_code.includes(createOrder.products.discount_code)) {
-                createOrder.products.total = createOrder.products.total - (20 * createOrder.products.product_quantity);
-                console.log('Code is valid. Discount applied.');
-                await createOrder.save();
 
-                const transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: process.env.MAIL_ADDRESS,
-                        pass: process.env.MAIL_PASSWORD,
-                    },
-                });
+        if (list_discount_code.includes(createOrder.products.discount_code)) {
+            createOrder.products.total = createOrder.products.total - (20 * createOrder.products.product_quantity);
+            console.log('Code is valid. Discount applied.');
+            await createOrder.save();
 
-                const emailSubject = `CÔCÔ #${newOrder.order_number}`;
-                const tableHtml = generateProductTableForDiscount(newOrder.products);
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.MAIL_ADDRESS,
+                    pass: process.env.MAIL_PASSWORD,
+                },
+            });
 
-                const emailContent = `
+            const emailSubject = `CÔCÔ #${newOrder.order_number}`;
+            const tableHtml = generateProductTableForDiscount(newOrder.products);
+
+            const emailContent = `
                                     <div style="text-align: center; font-size: 20px;">
                                     <img src="https://i.ibb.co/hZ7gTsq/0dz6syd7.png" alt="coco_logo" style="width: 80px; height: 150px;">
                                         <p>E-Mail: service@the-coco.de</p>
@@ -93,20 +92,16 @@ export const orderForm = async (req, res, next) => {
                                       <p style="white-space: pre-line;">Schöne Grüße,<br>dein CÔCÔ-Team</p>
                                     </div>`;
 
-                const mailOptions = {
-                    from: '"No Reply" <no-reply@gmail.com>',
-                    to: email,
-                    subject: emailSubject,
-                    html: emailContent,
-                };
+            const mailOptions = {
+                from: '"No Reply" <no-reply@gmail.com>',
+                to: email,
+                subject: emailSubject,
+                html: emailContent,
+            };
 
-                // Send email
-                await transporter.sendMail(mailOptions);
-                return res.status(CREATED).json(createOrder);
-            } else {
-                console.log('Error: Code is not valid.');
-                return res.status(BAD_REQUEST).json({ error: 'Invalid discount code.' });
-            }
+            // Send email
+            await transporter.sendMail(mailOptions);
+            return res.status(CREATED).json(createOrder);
         }
 
         const transporter = nodemailer.createTransport({
