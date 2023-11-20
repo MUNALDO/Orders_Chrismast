@@ -10,7 +10,7 @@ const Export = ({ title }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/order/export-xlsx", { method: "POST" });
+      const response = await fetch("https://orders-chrismast-ten.vercel.app/api/order/export-xlsx", { method: "POST" });
 
       if (response.ok) {
         // Trigger download by creating a Blob and using the URL.createObjectURL

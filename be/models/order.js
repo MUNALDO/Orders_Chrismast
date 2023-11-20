@@ -25,7 +25,7 @@ const order = new mongoose.Schema(
                 },
                 product_value: {
                     type: Number,
-                    default: 149
+                    default: 148
                 }
             }
         ],
