@@ -8,7 +8,7 @@ const Export = ({ title }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://localhost:8080/api/order/export-xlsx", { method: "POST" });
+      const response = await fetch("https://orders-chrismast-ten.vercel.app/api/order/export-xlsx", { method: "POST" });
 
       console.log(response);
       if (response.ok) {
