@@ -12,7 +12,7 @@ export const orderForm = async (req, res, next) => {
         email, phone_number
     } = req.body;
 
-    const list_discount_code = ['NXT123', 'LTTH456', 'KTP789', 'NDQ10'];
+    const list_discount_code = ['WEIHNACHT2023'];
 
     try {
         // Generate a random number between 1 and 100000
@@ -59,6 +59,7 @@ export const orderForm = async (req, res, next) => {
 
             const emailSubject = `CÔCÔ #${newOrder.order_number}`;
             const tableHtml = generateProductTableForDiscount(newOrder.products);
+            const additionalTableHtml = additionalTable(newOrder.products);
 
             const emailContent = `
                                     <div style="text-align: center; font-size: 20px;">
@@ -72,6 +73,7 @@ export const orderForm = async (req, res, next) => {
                                         werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
                                         zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
                                         ${tableHtml}
+                                        ${additionalTableHtml}
                                         <p>Bitte beachte auch unsere 
                                         <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> 
                                         wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
@@ -114,6 +116,7 @@ export const orderForm = async (req, res, next) => {
 
         const emailSubject = `CÔCÔ #${newOrder.order_number}`;
         const tableHtml = generateProductTable(newOrder.products);
+        const additionalTableHtml = additionalTable(newOrder.products);
 
         const emailContent = `
                             <div style="text-align: center; font-size: 20px;">
@@ -127,6 +130,7 @@ export const orderForm = async (req, res, next) => {
                                 werden dich so schnell wie möglich über den aktuellen Status informieren. Unten siehst du
                                 zur Kontrolle eine Zusammenfassung deiner Bestellung.</p>
                                 ${tableHtml}
+                                ${additionalTableHtml}
                                 <p>Bitte beachte auch unsere 
                                 <a href="https://coco.lieferbude.de/static/pdf/terms_and_conditions.3f0f42936d6d.pdf">AGBs</a> 
                                 wie auch die <a href="https://coco.lieferbude.de/static/pdf/privacy_policy.adb8727a38b1.pdf">Datenschutzrichtlinien</a></p>
@@ -183,59 +187,39 @@ const generateProductTable = (products) => {
         ${tableRows}
     </table>`;
 
-    const mwstValue = 0.07;
-    const gesamtValue = products.total;
-    const nettoValue = (gesamtValue / (1 + mwstValue)).toFixed(2);
-    const mwst = (gesamtValue - nettoValue).toFixed(2);
-
-    // Additional rows without borders
-    const additionalRows = `
-        <tr>
-            <td colspan="2"></td>
-            <td style="text-align: center;">MwSt.7.00%</td>
-            <td style="text-align: right;">${mwst}€</td>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-            <td style="text-align: center;">Netto</td>
-            <td style="text-align: right;">${nettoValue}€</td>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-            <td style="text-align: center;">Gesamt</td>
-            <td style="text-align: right;">${gesamtValue}€</td>
-        </tr>
-    `;
-
-    return tableHtml + additionalRows;
+    return tableHtml;
 };
 
 const generateProductTableForDiscount = (products) => {
     const tableRows = `
         <tr>
-            <td style="text-align: center;">${products.product_name}</td>
-            <td style="text-align: center;">${products.product_quantity}x</td>
-            <td style="text-align: center;">${products.product_value}€</td>
-            <td style="text-align: center;">${products.total}€</td>
+            <td style="text-align: center; width: 10px;">${products.product_name}</td>
+            <td style="text-align: center; width: 10px;">${products.product_quantity}x</td>
+            <td style="text-align: center; width: 10px;">${products.product_value}€</td>
+            <td style="text-align: center; width: 10px;">${products.total}€</td>
         </tr>
-         <tr>
-            <td style="text-align: center;">Rabatt</td>
-            <td style="text-align: center;"></td>
-            <td style="text-align: center;"></td>
-            <td style="text-align: center;">- ${20 * products.product_quantity}€</td>
+        <tr>
+            <td style="text-align: center; width: 10px;">Rabatt</td>
+            <td style="text-align: center; width: 10px; color: white;">Produkt</td>
+            <td style="text-align: center; width: 10px; color: white;">Produkt</td>
+            <td style="text-align: center; width: 10px;">- ${20 * products.product_quantity}€</td>
         </tr>
     `;
 
     const tableHtml = `<table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;">
         <tr>
-            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Produkt</th>
-            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Menge</th>
-            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Stückpreis</th>
-            <th style="border: 1px solid #ddd; padding: 8px; text-align: center;">Gesamt</th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Produkt</th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Menge</th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Stückpreis</th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: center;">Gesamt</th>
         </tr>
         ${tableRows}
     </table>`;
 
+    return tableHtml;
+};
+
+const additionalTable = (products) => {
     const mwstValue = 0.07;
     const gesamtValue = products.total - (20 * products.product_quantity);
     const nettoValue = (gesamtValue / (1 + mwstValue)).toFixed(2);
@@ -244,24 +228,36 @@ const generateProductTableForDiscount = (products) => {
     // Additional rows without borders
     const additionalRows = `
         <tr>
-            <td colspan="2"></td>
-            <td style="text-align: center;">MwSt.7.00%</td>
-            <td style="text-align: right;">${mwst}€</td>
+            <td style="text-align: center; color: white; width: 10px; font-size: 18px;">Produkt</td>
+            <td style="text-align: center; color: white; width: 10px; font-size: 18px;">Produkt</td>
+            <td style="text-align: left; width: 10px; font-size: 18px;">MwSt.7.00%</td>
+            <td style="text-align: center; width: 10px; font-size: 18px;">${mwst}€</td>
         </tr>
         <tr>
-            <td colspan="2"></td>
-            <td style="text-align: center;">Netto</td>
-            <td style="text-align: right;">${nettoValue}€</td>
+            <td style="text-align: center; color: white; width: 10px; font-size: 18px;">Produkt</td>
+            <td style="text-align: center; color: white; width: 10px; font-size: 18px;">Produkt</td>
+            <td style="text-align: left; width: 10px; font-size: 18px;">Netto</td>
+            <td style="text-align: center; width: 10px; font-size: 18px;">${nettoValue}€</td>
         </tr>
         <tr>
-            <td colspan="2"></td>
-            <td style="text-align: center;">Gesamt</td>
-            <td style="text-align: right;">${gesamtValue}€</td>
+            <td style="text-align: center; color: white; width: 10px; font-size: 18px;">Produkt</td>
+            <td style="text-align: center; color: white; width: 10px; font-size: 18px;">Produkt</td>
+            <td style="text-align: left; width: 10px; font-size: 18px;">Gesamt</td>
+            <td style="text-align: center; width: 10px; font-size: 18px;">${gesamtValue}€</td>
         </tr>
     `;
 
-    return tableHtml + additionalRows;
-};
+    const addTableHtml = `<table style="border-collapse: collapse; width: 100%; border: 0px solid #ddd;">
+        <tr>
+            <th style="border: 0px solid #ddd; padding: 2px; text-align: center; color: white;">Produkt</th>
+            <th style="border: 0px solid #ddd; padding: 2px; text-align: center; color: white;">Produkt</th>
+            <th style="border: 0px solid #ddd; padding: 2px; text-align: center; color: white;">Produkt</th>
+            <th style="border: 0px solid #ddd; padding: 2px; text-align: center; color: white;">Produkt</th>
+        </tr>
+        ${additionalRows}
+    </table>`;
+    return addTableHtml;
+}
 
 export const exportOrdersToExcel = async (req, res) => {
     try {
