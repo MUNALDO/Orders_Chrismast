@@ -44,7 +44,7 @@ export const orderForm = async (req, res, next) => {
         await createOrder.save();
 
 
-        if (list_discount_code.includes(createOrder.products.discount_code)) {
+        if (list_discount_code.includes(createOrder.products.discount_code.toUpperCase())) {
             createOrder.products.total = createOrder.products.total - (20 * createOrder.products.product_quantity);
             console.log('Code is valid. Discount applied.');
             await createOrder.save();
