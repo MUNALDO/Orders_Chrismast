@@ -51,6 +51,5 @@
       "last 1 safari version",
       "last 1 edge version"
     ]
-  },
-  "proxy": "https://orders-chrismast-ten.vercel.app/api"
+  }
 }

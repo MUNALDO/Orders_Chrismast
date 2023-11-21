@@ -8,8 +8,9 @@ const Export = ({ title }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://orders-chrismast-ten.vercel.app/api/order/export-xlsx", { method: "POST" });
+      const response = await fetch("https://localhost:8080/api/order/export-xlsx", { method: "POST" });
 
+      console.log(response);
       if (response.ok) {
         // Trigger download by creating a Blob and using the URL.createObjectURL
         const blob = await response.blob();
@@ -24,7 +25,7 @@ const Export = ({ title }) => {
 
         console.log("Export successful");
       } else {
-        console.error(`Export failed with status: ${response.status}`);
+        console.error(`Export failed with status: ${response}`);
       }
     } catch (err) {
       console.error("Error exporting:", err);

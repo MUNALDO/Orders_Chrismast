@@ -294,20 +294,19 @@ export const exportOrdersToExcel = async (req, res) => {
         worksheet.columns = columns;
 
         orders.forEach(order => {
-            order.products.forEach(product => {
-                worksheet.addRow({
-                    order_number: order.order_number,
-                    pick_up_place: order.pick_up_place,
-                    pick_up_time: order.pick_up_time,
-                    product_name: product.product_name,
-                    product_quantity: product.product_quantity,
-                    product_value: product.product_value,
-                    first_name: order.first_name,
-                    last_name: order.last_name,
-                    email: order.email,
-                    phone_number: order.phone_number,
-                    create_at_string: order.create_at_string,
-                });
+            const product = order.products; // Assuming there's only one product per order
+            worksheet.addRow({
+                order_number: order.order_number,
+                pick_up_place: order.pick_up_place,
+                pick_up_time: order.pick_up_time,
+                product_name: product.product_name,
+                product_quantity: product.product_quantity,
+                product_value: product.product_value,
+                first_name: order.first_name,
+                last_name: order.last_name,
+                email: order.email,
+                phone_number: order.phone_number,
+                create_at_string: order.create_at_string,
             });
         });
 
